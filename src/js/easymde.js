@@ -2,22 +2,30 @@
 var CodeMirror = require('codemirror');
 require('codemirror/addon/edit/continuelist.js');
 require('./codemirror/tablist');
+/* steamdb
 require('codemirror/addon/display/fullscreen.js');
 require('codemirror/mode/markdown/markdown.js');
 require('codemirror/addon/mode/overlay.js');
+*/
 require('codemirror/addon/display/placeholder.js');
+/* steamdb
 require('codemirror/addon/display/autorefresh.js');
 require('codemirror/addon/selection/mark-selection.js');
 require('codemirror/addon/search/searchcursor.js');
+*/
 require('codemirror/mode/gfm/gfm.js');
+/* steamdb
 require('codemirror/mode/xml/xml.js');
 var CodeMirrorSpellChecker = require('codemirror-spell-checker');
 var marked = require('marked').marked;
+*/
 
 
 // Some variables
 var isMac = /Mac/.test(navigator.platform);
+/* steamdb
 var anchorToExternalRegex = new RegExp(/(<a.*?https?:\/\/.*?[^a]>)+?/g);
+*/
 
 // Mapping of actions that can be bound to keyboard shortcuts or toolbar buttons
 var bindings = {
@@ -31,7 +39,9 @@ var bindings = {
     'toggleOrderedList': toggleOrderedList,
     'toggleUnorderedList': toggleUnorderedList,
     'toggleCodeBlock': toggleCodeBlock,
+    /* steamdb
     'togglePreview': togglePreview,
+    */
     'toggleStrikethrough': toggleStrikethrough,
     'toggleHeading1': toggleHeading1,
     'toggleHeading2': toggleHeading2,
@@ -44,8 +54,10 @@ var bindings = {
     'drawHorizontalRule': drawHorizontalRule,
     'undo': undo,
     'redo': redo,
+    /* steamdb
     'toggleSideBySide': toggleSideBySide,
     'toggleFullScreen': toggleFullScreen,
+    */
 };
 
 var shortcuts = {
@@ -66,9 +78,11 @@ var shortcuts = {
     'toggleOrderedList': 'Cmd-Alt-L',
     'toggleUnorderedList': 'Cmd-L',
     'toggleCodeBlock': 'Cmd-Alt-C',
+    /* steamdb
     'togglePreview': 'Cmd-P',
     'toggleSideBySide': 'F9',
     'toggleFullScreen': 'F11',
+    */
 };
 
 var getBindingName = function (f) {
@@ -88,11 +102,13 @@ var isMobile = function () {
     return check;
 };
 
+/* steamdb
+
 /**
  * Modify HTML to add 'target="_blank"' to links so they open in new tabs by default.
  * @param {string} htmlText - HTML to be modified.
  * @return {string} The modified HTML text.
- */
+ *
 function addAnchorTargetBlank(htmlText) {
     var match;
     while ((match = anchorToExternalRegex.exec(htmlText)) !== null) {
@@ -111,7 +127,7 @@ function addAnchorTargetBlank(htmlText) {
  * Modify HTML to remove the list-style when rendering checkboxes.
  * @param {string} htmlText - HTML to be modified.
  * @return {string} The modified HTML text.
- */
+ *
 function removeListStyleWhenCheckbox(htmlText) {
 
     var parser = new DOMParser();
@@ -134,6 +150,7 @@ function removeListStyleWhenCheckbox(htmlText) {
 
     return htmlDoc.documentElement.innerHTML;
 }
+*/
 
 /**
  * Fix shortcut. Mac use Command, others use Ctrl.
@@ -208,6 +225,7 @@ function createToolbarButton(options, enableActions, enableTooltips, shortcuts, 
         bindings[options.name] = options.action;
     }
 
+    /* steamdb
     if (options.title && enableTooltips) {
         el.title = createTooltip(options.title, options.action, shortcuts);
 
@@ -219,6 +237,18 @@ function createToolbarButton(options, enableActions, enableTooltips, shortcuts, 
 
     if (options.title) {
         el.setAttribute('aria-label', options.title);
+    }
+    */
+
+    if (options.title) { // steamdb
+        let title = createTooltip(options.title, options.action, shortcuts);
+
+        if (isMac) {
+            title = title.replace('Ctrl', '⌘');
+            title = title.replace('Alt', '⌥');
+        }
+
+        el.setAttribute('aria-label', title);
     }
 
     if (options.noDisable) {
@@ -348,13 +378,14 @@ function getState(cm, pos) {
 }
 
 
+/* steamdb
 // Saved overflow setting
 var saved_overflow = '';
 
 /**
  * Toggle full screen of the editor.
  * @param {EasyMDE} editor
- */
+ *
 function toggleFullScreen(editor) {
     // Set fullscreen
     var cm = editor.codemirror;
@@ -410,6 +441,7 @@ function toggleFullScreen(editor) {
         toolbarButton.classList.toggle('active');
     }
 }
+*/
 
 
 /**
@@ -860,10 +892,12 @@ function escapePromptURL(url) {
     return encodeURI(url).replace(/([\\()])/g, '\\$1');
 }
 
+/* steamdb
+
 /**
  * Action for opening the browse-file window to upload an image to a server.
  * @param {EasyMDE} editor The EasyMDE object
- */
+ *
 function drawUploadedImage(editor) {
     // TODO: Draw the image template with a fake url? ie: '![](importing foo.png...)'
     editor.openBrowseFileWindow();
@@ -873,7 +907,7 @@ function drawUploadedImage(editor) {
  * Action executed after an image have been successfully imported on the server.
  * @param {EasyMDE} editor The EasyMDE object
  * @param {string} url The url of the uploaded image
- */
+ *
 function afterImageUploaded(editor, url) {
     var cm = editor.codemirror;
     var stat = getState(cm);
@@ -896,6 +930,7 @@ function afterImageUploaded(editor, url) {
         editor.updateStatusBar('upload-image', editor.options.imageTexts.sbInit);
     }, 1000);
 }
+*/
 
 /**
  * Action for drawing a table.
@@ -942,10 +977,12 @@ function redo(editor) {
 }
 
 
+/* steamdb
+
 /**
  * Toggle side by side preview
  * @param {EasyMDE} editor
- */
+ *
 function toggleSideBySide(editor) {
     var cm = editor.codemirror;
     var wrapper = cm.getWrapperElement();
@@ -1022,7 +1059,7 @@ function toggleSideBySide(editor) {
 /**
  * Preview action.
  * @param {EasyMDE} editor
- */
+ *
 function togglePreview(editor) {
     var cm = editor.codemirror;
     var wrapper = cm.getWrapperElement();
@@ -1080,6 +1117,7 @@ function togglePreview(editor) {
     }
 
 }
+*/
 
 function _replaceSelection(cm, active, startEnd, url) {
     if (cm.getWrapperElement().lastChild.classList.contains('editor-preview-active'))
@@ -1392,6 +1430,8 @@ function _cleanBlock(cm) {
     }
 }
 
+/* steamdb
+
 /**
  * Convert a number of bytes to a human-readable file size. If you desire
  * to add a space between the value and the unit, you need to add this space
@@ -1399,7 +1439,7 @@ function _cleanBlock(cm) {
  * @param bytes {number} A number of bytes, as integer. Ex: 421137
  * @param units {number[]} An array of human-readable units, ie. [' B', ' K', ' MB']
  * @returns string A human-readable file size. Ex: '412 KB'
- */
+ *
 function humanFileSize(bytes, units) {
     if (Math.abs(bytes) < 1024) {
         return '' + bytes + units[0];
@@ -1411,6 +1451,7 @@ function humanFileSize(bytes, units) {
     } while (Math.abs(bytes) >= 1024 && u < units.length);
     return '' + bytes.toFixed(1) + units[u];
 }
+*/
 
 // Merge the properties of one object into another.
 function _mergeProperties(target, source) {
@@ -1443,6 +1484,7 @@ function extend(target) {
 }
 
 /* The right word count in respect for CJK. */
+/* steamdb
 function wordCount(data) {
     var pattern = /[a-zA-Z0-9_\u00A0-\u02AF\u0392-\u03c9\u0410-\u04F9]+|[\u4E00-\u9FFF\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\uac00-\ud7af]+/g;
     var m = data.match(pattern);
@@ -1457,6 +1499,7 @@ function wordCount(data) {
     }
     return count;
 }
+*/
 
 var iconClassMap = {
     'bold': 'fa fa-bold',
@@ -1491,6 +1534,7 @@ var toolbarBuiltInButtons = {
         name: 'bold',
         action: toggleBold,
         className: iconClassMap['bold'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M4 2h4.5a3.501 3.501 0 0 1 2.852 5.53A3.499 3.499 0 0 1 9.5 14H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1Zm1 7v3h4.5a1.5 1.5 0 0 0 0-3Zm3.5-2a1.5 1.5 0 0 0 0-3H5v3Z"></path></svg>',
         title: 'Bold',
         default: true,
     },
@@ -1498,6 +1542,7 @@ var toolbarBuiltInButtons = {
         name: 'italic',
         action: toggleItalic,
         className: iconClassMap['italic'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M6 2.75A.75.75 0 0 1 6.75 2h6.5a.75.75 0 0 1 0 1.5h-2.505l-3.858 9H9.25a.75.75 0 0 1 0 1.5h-6.5a.75.75 0 0 1 0-1.5h2.505l3.858-9H6.75A.75.75 0 0 1 6 2.75Z"></path></svg>',
         title: 'Italic',
         default: true,
     },
@@ -1505,15 +1550,18 @@ var toolbarBuiltInButtons = {
         name: 'strikethrough',
         action: toggleStrikethrough,
         className: iconClassMap['strikethrough'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M11.055 8.5c.524.536.815 1.257.811 2.007a3.133 3.133 0 0 1-1.12 2.408C9.948 13.597 8.748 14 7.096 14c-1.706 0-3.104-.607-3.902-1.377a.751.751 0 0 1 1.042-1.079c.48.463 1.487.956 2.86.956 1.422 0 2.232-.346 2.676-.726.435-.372.594-.839.594-1.267 0-.472-.208-.857-.647-1.197-.448-.346-1.116-.623-1.951-.81H1.75a.75.75 0 0 1 0-1.5h12.5a.75.75 0 0 1 0 1.5ZM7.581 3.25c-2.036 0-2.778 1.082-2.778 1.786 0 .055.002.107.006.157a.75.75 0 0 1-1.496.114 3.506 3.506 0 0 1-.01-.271c0-1.832 1.75-3.286 4.278-3.286 1.418 0 2.721.58 3.514 1.093a.75.75 0 1 1-.814 1.26c-.64-.414-1.662-.853-2.7-.853Z"></path></svg>',
         title: 'Strikethrough',
     },
     'heading': {
         name: 'heading',
         action: toggleHeadingSmaller,
         className: iconClassMap['heading'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M3.75 2a.75.75 0 0 1 .75.75V7h7V2.75a.75.75 0 0 1 1.5 0v10.5a.75.75 0 0 1-1.5 0V8.5h-7v4.75a.75.75 0 0 1-1.5 0V2.75A.75.75 0 0 1 3.75 2Z"></path></svg>',
         title: 'Heading',
         default: true,
     },
+    /* steamdb
     'heading-smaller': {
         name: 'heading-smaller',
         action: toggleHeadingSmaller,
@@ -1544,19 +1592,23 @@ var toolbarBuiltInButtons = {
         className: iconClassMap['heading-3'],
         title: 'Small Heading',
     },
+    */
     'separator-1': {
         name: 'separator-1',
     },
     'code': {
         name: 'code',
         action: toggleCodeBlock,
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="m11.28 3.22 4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734L13.94 8l-3.72-3.72a.749.749 0 0 1 .326-1.275.749.749 0 0 1 .734.215Zm-6.56 0a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042L2.06 8l3.72 3.72a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L.47 8.53a.75.75 0 0 1 0-1.06Z"></path></svg>',
         className: iconClassMap['code'],
         title: 'Code',
+        default: true,
     },
     'quote': {
         name: 'quote',
         action: toggleBlockquote,
         className: iconClassMap['quote'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M1.75 2.5h10.5a.75.75 0 0 1 0 1.5H1.75a.75.75 0 0 1 0-1.5Zm4 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2.5 7.75v6a.75.75 0 0 1-1.5 0v-6a.75.75 0 0 1 1.5 0Z"></path></svg>',
         title: 'Quote',
         default: true,
     },
@@ -1564,6 +1616,7 @@ var toolbarBuiltInButtons = {
         name: 'unordered-list',
         action: toggleUnorderedList,
         className: iconClassMap['unordered-list'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M5.75 2.5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5Zm0 5h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1 0-1.5ZM2 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2Zm1-6a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM2 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>',
         title: 'Generic List',
         default: true,
     },
@@ -1571,6 +1624,7 @@ var toolbarBuiltInButtons = {
         name: 'ordered-list',
         action: toggleOrderedList,
         className: iconClassMap['ordered-list'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M5 3.25a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 5 3.25Zm0 5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 5 8.25Zm0 5a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5a.75.75 0 0 1-.75-.75ZM.924 10.32a.5.5 0 0 1-.851-.525l.001-.001.001-.002.002-.004.007-.011c.097-.144.215-.273.348-.384.228-.19.588-.392 1.068-.392.468 0 .858.181 1.126.484.259.294.377.673.377 1.038 0 .987-.686 1.495-1.156 1.845l-.047.035c-.303.225-.522.4-.654.597h1.357a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5c0-1.005.692-1.52 1.167-1.875l.035-.025c.531-.396.8-.625.8-1.078a.57.57 0 0 0-.128-.376C1.806 10.068 1.695 10 1.5 10a.658.658 0 0 0-.429.163.835.835 0 0 0-.144.153ZM2.003 2.5V6h.503a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1h.503V3.308l-.28.14a.5.5 0 0 1-.446-.895l1.003-.5a.5.5 0 0 1 .723.447Z"></path></svg>',
         title: 'Numbered List',
         default: true,
     },
@@ -1578,7 +1632,9 @@ var toolbarBuiltInButtons = {
         name: 'clean-block',
         action: cleanBlock,
         className: iconClassMap['clean-block'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M13.25 1c.966 0 1.75.784 1.75 1.75v10.5A1.75 1.75 0 0 1 13.25 15H2.75A1.75 1.75 0 0 1 1 13.25V2.75C1 1.784 1.784 1 2.75 1ZM2.75 2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25V2.75a.25.25 0 0 0-.25-.25Zm8.5 6.25h-6.5a.75.75 0 0 1 0-1.5h6.5a.75.75 0 0 1 0 1.5Z"></path></svg>',
         title: 'Clean block',
+        default: true,
     },
     'separator-2': {
         name: 'separator-2',
@@ -1587,6 +1643,7 @@ var toolbarBuiltInButtons = {
         name: 'link',
         action: drawLink,
         className: iconClassMap['link'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>',
         title: 'Create Link',
         default: true,
     },
@@ -1594,30 +1651,38 @@ var toolbarBuiltInButtons = {
         name: 'image',
         action: drawImage,
         className: iconClassMap['image'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M16 13.25A1.75 1.75 0 0 1 14.25 15H1.75A1.75 1.75 0 0 1 0 13.25V2.75C0 1.784.784 1 1.75 1h12.5c.966 0 1.75.784 1.75 1.75ZM1.75 2.5a.25.25 0 0 0-.25.25v10.5c0 .138.112.25.25.25h.94l.03-.03 6.077-6.078a1.75 1.75 0 0 1 2.412-.06L14.5 10.31V2.75a.25.25 0 0 0-.25-.25Zm12.5 11a.25.25 0 0 0 .25-.25v-.917l-4.298-3.889a.25.25 0 0 0-.344.009L4.81 13.5ZM7 6a2 2 0 1 1-3.999.001A2 2 0 0 1 7 6ZM5.5 6a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0Z"></path></svg>',
         title: 'Insert Image',
         default: true,
     },
+    /* steamdb
     'upload-image': {
         name: 'upload-image',
         action: drawUploadedImage,
         className: iconClassMap['upload-image'],
         title: 'Import an image',
     },
+    */
     'table': {
         name: 'table',
         action: drawTable,
         className: iconClassMap['table'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25ZM6.5 6.5v8h7.75a.25.25 0 0 0 .25-.25V6.5Zm8-1.5V1.75a.25.25 0 0 0-.25-.25H6.5V5Zm-13 1.5v7.75c0 .138.112.25.25.25H5v-8ZM5 5V1.5H1.75a.25.25 0 0 0-.25.25V5Z"></path></svg>',
         title: 'Insert Table',
+        default: true,
     },
     'horizontal-rule': {
         name: 'horizontal-rule',
         action: drawHorizontalRule,
         className: iconClassMap['horizontal-rule'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M0 7.75A.75.75 0 0 1 .75 7h14.5a.75.75 0 0 1 0 1.5H.75A.75.75 0 0 1 0 7.75Z"></path></svg>',
         title: 'Insert Horizontal Line',
+        default: true,
     },
     'separator-3': {
         name: 'separator-3',
     },
+    /* steamdb
     'preview': {
         name: 'preview',
         action: togglePreview,
@@ -1647,14 +1712,17 @@ var toolbarBuiltInButtons = {
     'separator-4': {
         name: 'separator-4',
     },
+    */
     'guide': {
         name: 'guide',
         action: 'https://www.markdownguide.org/basic-syntax/',
         className: iconClassMap['guide'],
+        icon: '<svg class="octicon" viewBox="0 0 16 16" width="16" height="16"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.92 6.085h.001a.749.749 0 1 1-1.342-.67c.169-.339.436-.701.849-.977C6.845 4.16 7.369 4 8 4a2.756 2.756 0 0 1 1.637.525c.503.377.863.965.863 1.725 0 .448-.115.83-.329 1.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6.24 6.24 0 0 0-.26.16.952.952 0 0 0-.276.245.75.75 0 0 1-1.248-.832c.184-.264.42-.489.692-.661.103-.067.207-.132.313-.195l.007-.004c.1-.061.182-.11.258-.161a.969.969 0 0 0 .277-.245C8.96 6.514 9 6.427 9 6.25a.612.612 0 0 0-.262-.525A1.27 1.27 0 0 0 8 5.5c-.369 0-.595.09-.74.187a1.01 1.01 0 0 0-.34.398ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>',
         noDisable: true,
         title: 'Markdown Guide',
         default: true,
     },
+    /* steamdb
     'separator-5': {
         name: 'separator-5',
     },
@@ -1672,6 +1740,7 @@ var toolbarBuiltInButtons = {
         noDisable: true,
         title: 'Redo',
     },
+    */
 };
 
 var insertTexts = {
@@ -1737,6 +1806,7 @@ function EasyMDE(options) {
     // Used later to refer to it"s parent
     options.parent = this;
 
+    /* steamdb
     // Check if Font Awesome needs to be auto downloaded
     var autoDownloadFA = true;
 
@@ -1762,6 +1832,7 @@ function EasyMDE(options) {
         link.href = 'https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css';
         document.getElementsByTagName('head')[0].appendChild(link);
     }
+    */
 
 
     // Find the textarea to use
@@ -1809,6 +1880,7 @@ function EasyMDE(options) {
     }
 
 
+    /* steamdb
     // Add default preview rendering function
     if (!options.previewRender) {
         options.previewRender = function (plainText) {
@@ -1816,7 +1888,7 @@ function EasyMDE(options) {
             return this.parent.markdown(plainText);
         };
     }
-
+    */
 
     // Set default options for parsing config
     options.parsingConfig = extend({
@@ -1897,6 +1969,7 @@ function EasyMDE(options) {
         this.value(options.initialValue);
     }
 
+    /* steamdb
     if (options.uploadImage) {
         var self = this;
 
@@ -1940,7 +2013,10 @@ function EasyMDE(options) {
             }
         });
     }
+    */
 }
+
+/* steamdb
 
 /**
  * Upload asynchronously a list of images to a server.
@@ -1952,7 +2028,7 @@ function EasyMDE(options) {
  * @param {FileList} files The files to upload the the server.
  * @param [onSuccess] {function} see EasyMDE.prototype.uploadImage
  * @param [onError] {function} see EasyMDE.prototype.uploadImage
- */
+ *
 EasyMDE.prototype.uploadImages = function (files, onSuccess, onError) {
     if (files.length === 0) {
         return;
@@ -1974,7 +2050,7 @@ EasyMDE.prototype.uploadImages = function (files, onSuccess, onError) {
  * - the browse-file window (opened when the user clicks on the *upload-image* icon).
  * @param imageUploadFunction {Function} The custom function to upload the image passed in options.
  * @param {FileList} files The files to upload the the server.
- */
+ *
 EasyMDE.prototype.uploadImagesUsingCustomFunction = function (imageUploadFunction, files) {
     if (files.length === 0) {
         return;
@@ -1991,7 +2067,7 @@ EasyMDE.prototype.uploadImagesUsingCustomFunction = function (imageUploadFunctio
  * Update an item in the status bar.
  * @param itemName {string} The name of the item to update (ie. 'upload-image', 'autosave', etc.).
  * @param content {string} the new content of the item to write in the status bar.
- */
+ *
 EasyMDE.prototype.updateStatusBar = function (itemName, content) {
     if (!this.gui.statusbar) {
         return;
@@ -2009,7 +2085,7 @@ EasyMDE.prototype.updateStatusBar = function (itemName, content) {
 
 /**
  * Default markdown render.
- */
+ *
 EasyMDE.prototype.markdown = function (text) {
     if (marked) {
         // Initialize
@@ -2029,10 +2105,10 @@ EasyMDE.prototype.markdown = function (text) {
 
         if (this.options && this.options.renderingConfig && this.options.renderingConfig.codeSyntaxHighlighting === true) {
 
-            /* Get HLJS from config or window */
+            /* Get HLJS from config or window *
             var hljs = this.options.renderingConfig.hljs || window.hljs;
 
-            /* Check if HLJS loaded */
+            /* Check if HLJS loaded *
             if (hljs) {
                 markedOptions.highlight = function (code, language) {
                     if (language && hljs.getLanguage(language)) {
@@ -2064,6 +2140,7 @@ EasyMDE.prototype.markdown = function (text) {
         return htmlText;
     }
 };
+*/
 
 /**
  * Render editor to the given element.
@@ -2103,6 +2180,7 @@ EasyMDE.prototype.render = function (el) {
     keyMaps['Enter'] = 'newlineAndIndentContinueMarkdownList';
     keyMaps['Tab'] = 'tabAndIndentMarkdownList';
     keyMaps['Shift-Tab'] = 'shiftTabAndUnindentMarkdownList';
+    /* steamdb
     keyMaps['Esc'] = function (cm) {
         if (cm.getOption('fullScreen')) toggleFullScreen(self);
     };
@@ -2115,6 +2193,7 @@ EasyMDE.prototype.render = function (el) {
         }
     };
     document.addEventListener('keydown', this.documentOnKeyDown, false);
+    */
 
     var mode, backdrop;
 
@@ -2132,6 +2211,7 @@ EasyMDE.prototype.render = function (el) {
         mode.name = 'gfm';
         mode.gitHubSpice = false;
     }
+    /*
     if (options.spellChecker !== false) {
         mode = 'spell-checker';
         backdrop = options.parsingConfig;
@@ -2148,6 +2228,7 @@ EasyMDE.prototype.render = function (el) {
             });
         }
     }
+    */
 
     // eslint-disable-next-line no-unused-vars
     function configureMouse(cm, repeat, event) {
@@ -2205,6 +2286,7 @@ EasyMDE.prototype.render = function (el) {
     if (options.toolbar !== false) {
         this.gui.toolbar = this.createToolbar();
     }
+    /* steamdb
     if (options.status !== false) {
         this.gui.statusbar = this.createStatusbar();
     }
@@ -2292,6 +2374,7 @@ EasyMDE.prototype.render = function (el) {
     });
 
     this.gui.sideBySide = this.createSideBySide();
+    */
     this._rendered = this.element;
 
     if (options.autofocus === true || el.autofocus) {
@@ -2308,6 +2391,8 @@ EasyMDE.prototype.render = function (el) {
 EasyMDE.prototype.cleanup = function () {
     document.removeEventListener('keydown', this.documentOnKeyDown);
 };
+
+/* steamdb
 
 // Safari, in Private Browsing Mode, looks like it supports localStorage but all calls to setItem throw QuotaExceededError. We're going to detect this and set a variable accordingly.
 function isLocalStorageAvailable() {
@@ -2393,7 +2478,7 @@ EasyMDE.prototype.clearAutosavedValue = function () {
  * Open the browse-file window to upload an image to a server.
  * @param [onSuccess] {function} see EasyMDE.prototype.uploadImage
  * @param [onError] {function} see EasyMDE.prototype.uploadImage
- */
+ *
 EasyMDE.prototype.openBrowseFileWindow = function (onSuccess, onError) {
     var self = this;
     var imageInput = this.gui.toolbar.getElementsByClassName('imageInput')[0];
@@ -2418,7 +2503,7 @@ EasyMDE.prototype.openBrowseFileWindow = function (onSuccess, onError) {
  * - url (string): The URL of the uploaded image.
  * @param [onError] {function} A callback function to execute when the image upload fails, with one parameter:
  * - error (string): the detailed error to display to the user (based on messages from options.errorMessages).
- */
+ *
 EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
     var self = this;
     onSuccess = onSuccess || function onSuccess(imageUrl) {
@@ -2514,7 +2599,7 @@ EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
  *
  * @param imageUploadFunction {Function} The custom function to upload the image passed in options
  * @param file {File} The image to upload, as a HTML5 File object (https://developer.mozilla.org/en-US/docs/Web/API/File).
- */
+ *
 EasyMDE.prototype.uploadImageUsingCustomFunction = function (imageUploadFunction, file) {
     var self = this;
 
@@ -2619,6 +2704,7 @@ EasyMDE.prototype.createSideBySide = function () {
     };
     return preview;
 };
+*/
 
 EasyMDE.prototype.createToolbar = function (items) {
     items = items || this.options.toolbar;
@@ -2725,6 +2811,7 @@ EasyMDE.prototype.createToolbar = function (items) {
     return bar;
 };
 
+/* steamdb
 EasyMDE.prototype.createStatusbar = function (status) {
     // Initialize
     status = status || this.options.status;
@@ -2855,6 +2942,7 @@ EasyMDE.prototype.createStatusbar = function (status) {
     cmWrapper.parentNode.insertBefore(bar, cmWrapper.nextSibling);
     return bar;
 };
+*/
 
 /**
  * Get or set the text content.
@@ -2865,6 +2953,7 @@ EasyMDE.prototype.value = function (val) {
         return cm.getValue();
     } else {
         cm.getDoc().setValue(val);
+        /* steamdb
         if (this.isPreviewActive()) {
             var wrapper = cm.getWrapperElement();
             var preview = wrapper.lastChild;
@@ -2874,6 +2963,7 @@ EasyMDE.prototype.value = function (val) {
             }
 
         }
+        */
         return this;
     }
 };
@@ -2900,14 +2990,18 @@ EasyMDE.toggleOrderedList = toggleOrderedList;
 EasyMDE.cleanBlock = cleanBlock;
 EasyMDE.drawLink = drawLink;
 EasyMDE.drawImage = drawImage;
+/* steamdb
 EasyMDE.drawUploadedImage = drawUploadedImage;
+*/
 EasyMDE.drawTable = drawTable;
 EasyMDE.drawHorizontalRule = drawHorizontalRule;
 EasyMDE.undo = undo;
 EasyMDE.redo = redo;
+/* steamdb
 EasyMDE.togglePreview = togglePreview;
 EasyMDE.toggleSideBySide = toggleSideBySide;
 EasyMDE.toggleFullScreen = toggleFullScreen;
+*/
 
 /**
  * Bind instance methods for exports.
@@ -2966,9 +3060,11 @@ EasyMDE.prototype.drawLink = function () {
 EasyMDE.prototype.drawImage = function () {
     drawImage(this);
 };
+/* steamdb
 EasyMDE.prototype.drawUploadedImage = function () {
     drawUploadedImage(this);
 };
+*/
 EasyMDE.prototype.drawTable = function () {
     drawTable(this);
 };
@@ -2981,6 +3077,10 @@ EasyMDE.prototype.undo = function () {
 EasyMDE.prototype.redo = function () {
     redo(this);
 };
+EasyMDE.prototype.isPreviewActive = function () {
+    return false;
+};
+/* steamdb
 EasyMDE.prototype.togglePreview = function () {
     togglePreview(this);
 };
@@ -3048,5 +3148,6 @@ EasyMDE.prototype.toTextArea = function () {
         this.clearAutosavedValue();
     }
 };
+*/
 
 module.exports = EasyMDE;
